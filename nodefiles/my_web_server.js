@@ -1,8 +1,9 @@
-var http = require('http');
+var express = require("express");
+var app = express();
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(8080);
 
-console.log('Server running on port 8080.');
+app.get("/",function(req,res){
+        res.send("<h1>Hello from EC2</h1>");
+});
+
+app.listen(80);
