@@ -28,14 +28,11 @@ port.on('open', function() {
 			//Do something interesting with Attitude data here
 			console.log("Roll is " + fields.roll + "\nPitch is " + fields.pitch);
 
-			m.createMessage(400, {
-				1:	1,
-			}, echoMessage);
-
 		});
-
-
-
+		
+		// m.createMessage("MAV_CMD_COMPONENT_ARM_DISARM", {
+		// 	1:	1,
+		// }, echoMessage);
 		
 		//Create a few messages and print them to screen
 		m.createMessage("ATTITUDE", {
