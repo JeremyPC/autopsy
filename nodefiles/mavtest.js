@@ -3,7 +3,7 @@ var mavlink = require('mavlink');
 
 
 //Open serial port
-var port = new SerialPort('/dev/ttyUSB0', {
+var port = new SerialPort('/dev/cu.usbserial-A502IDJM', {
 	baudrate: 57600
 });
 
@@ -27,40 +27,56 @@ port.on('open', function() {
 		m.on('ATTITUDE', function(message, fields) {
 			//Do something interesting with Attitude data here
 			console.log("Roll is " + fields.roll + "\nPitch is " + fields.pitch);
-
 		});
 		
-		// m.createMessage("MAV_CMD_COMPONENT_ARM_DISARM", {
-		// 	1:	1,
+		m.createMessage("MISSION_ITEM", {
+			'target_system'		: 1,
+			'target_component'	: 1,
+			'seq'				: 1,
+			'frame'				: 2,
+			'command'			: 400,
+			'current'			: 1,
+			'autocontinue'		: 0,
+			'param1'			: 1,
+			'param2'			: 0,
+			'param3'			: 0,
+			'param4'			: 0,
+			'x'					: 0,
+			'y'					: 0,
+			'z'					: 0
+		}, function(message) {
+			echoMessage(message);
+            port.write(message.buffer);
+			console.log("Arm commanded.");
+        });
+		
+		// //Create a few messages and print them to screen
+		// m.createMessage("ATTITUDE", {
+		// 	'time_boot_ms':	30,
+		// 	'roll':			0.1,
+		// 	'pitch':		0.2,
+		// 	'yaw':			0.3,
+		// 	'rollspeed':	0.4,
+		// 	'pitchspeed':	0.5,
+		// 	'yawspeed':		0.6
 		// }, echoMessage);
 		
-		//Create a few messages and print them to screen
-		m.createMessage("ATTITUDE", {
-			'time_boot_ms':	30,
-			'roll':			0.1,
-			'pitch':		0.2,
-			'yaw':			0.3,
-			'rollspeed':	0.4,
-			'pitchspeed':	0.5,
-			'yawspeed':		0.6
-		}, echoMessage);
+		// m.createMessage("PARAM_VALUE", {
+		// 	'param_id':		'MY_PI',
+		// 	'param_value':	3.14159,
+		// 	'param_type':	5,
+		// 	'param_count':	100,
+		// 	'param_index':	55
+		// }, echoMessage);
 		
-		m.createMessage("PARAM_VALUE", {
-			'param_id':		'MY_PI',
-			'param_value':	3.14159,
-			'param_type':	5,
-			'param_count':	100,
-			'param_index':	55
-		}, echoMessage);
-		
-		m.createMessage("GPS_STATUS", {
-			'satellites_visible':		5,
-			'satellite_prn':			[1, 2, 3, 4, 5],
-			'satellite_used':			[2, 3, 4, 5, 6],
-			'satellite_elevation':		[3, 4, 5, 6, 7],
-			'satellite_azimuth':		[4, 5, 6, 7, 8],
-			'satellite_snr':			[5, 6, 7, 8, 9]
-		}, echoMessage);
+		// m.createMessage("GPS_STATUS", {
+		// 	'satellites_visible':		5,
+		// 	'satellite_prn':			[1, 2, 3, 4, 5],
+		// 	'satellite_used':			[2, 3, 4, 5, 6],
+		// 	'satellite_elevation':		[3, 4, 5, 6, 7],
+		// 	'satellite_azimuth':		[4, 5, 6, 7, 8],
+		// 	'satellite_snr':			[5, 6, 7, 8, 9]
+		// }, echoMessage);
 	});
 });
 
